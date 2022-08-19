@@ -2,4 +2,7 @@
 
 systemctl daemon-reload
 systemctl enable metal-bootloader
-/usr/bin/metal-bootloader.sh
+
+if [ -f /etc/metal/boot-info.yaml ]; then
+    /usr/bin/metal-bootloader.sh
+fi
