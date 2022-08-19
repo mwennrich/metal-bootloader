@@ -15,11 +15,10 @@ fi
 if ! efibootmgr | grep -q "^BootCurrent: $BOOTNUM" ; then
     echo "Setting bootloader to $BOOTNUM ($BOOTLOADERID)"
     efibootmgr -n "$BOOTNUM"
-    exit
 fi
 
 if ! efibootmgr | grep -q "^BootOrder: $BOOTNUM,"; then
     BOOTORDER=$(efibootmgr | grep -oP "^BootOrder: \K(.*)")
     echo "Setting bootloader to $BOOTNUM,$BOOTORDER"
-    efibootmgr -o "$BOOTNUM,$BOOTORDER"
+    efibootmgr -D -o "$BOOTNUM,$BOOTORDER"
 fi
