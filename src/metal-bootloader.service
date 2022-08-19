@@ -1,0 +1,11 @@
+# metal-bootloader.service
+[Unit]
+Description=metal-stack bootloader
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/metal-boodloader.sh
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target
