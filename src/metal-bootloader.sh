@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 BOOTINFO=/etc/metal/boot-info.yaml
 BOOTLOADERID=$(grep -oP '^bootloader_id: \K.*' /tmp/boot-info.yaml)
