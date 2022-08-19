@@ -5,11 +5,13 @@ BOOTINFO=/etc/metal/boot-info.yaml
 BOOTLOADERID=$(grep -oP '^bootloader_id: \K.*' $BOOTINFO)
 if [ -z "$BOOTLOADERID" ]; then
     echo "bootloader_id not found in $BOOTINFO"
+    exit 1
 fi
 
 BOOTNUM=$(efibootmgr | grep -oP "^Boot\K(\d+)(?=.*$BOOTLOADERID)")
 if [ -z "$BOOTNUM" ]; then
     echo "bootnum for $BOOTLOADERID not found"
+    exit 1
 fi
 
 if ! efibootmgr | grep -q "^BootCurrent: $BOOTNUM" ; then
