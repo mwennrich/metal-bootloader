@@ -1,17 +1,26 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 BOOTINFO=/etc/metal/boot-info.yaml
-BOOTLOADERID=$(grep -oP '^bootloader_id: \K.*' /tmp/boot-info.yaml)
-BOOTNUM=$(grep -oP "^Boot\K(\d+)(?=.*$BOOTLOADERID)" $BOOTINFO)
 
-if ! grep -q "^BootCurrent: $BOOTNUM" $BOOTINFO; then
-    echo "Setting bootloader to $BOOTNUM ($BOOTLOADERID)"
-    efibootmgr -n "$BOOTNUM"
-    exit
+BOOTLOADERID=$(grep -oP '^bootloader_id: \K.*' $BOOTINFO)
+if [ -z "$BOOTLOADERID" ]; then
+    echo "bootloader_id not found in $BOOTINFO"
+    exit 1
 fi
 
-if ! grep -q "^BootOrder: $BOOTNUM," $BOOTINFO; then
-    BOOTORDER=$(grep -oP "^BootOrder: \K(.*)" $BOOTINFO)
+BOOTNUM=$(efibootmgr | grep -oP "^Boot\K(\d+)(?=.*$BOOTLOADERID)")
+if [ -z "$BOOTNUM" ]; then
+    echo "bootnum for $BOOTLOADERID not found"
+    exit 1
+fi
+
+if ! efibootmgr | grep -q "^BootCurrent: $BOOTNUM" ; then
+    echo "Setting bootloader to $BOOTNUM ($BOOTLOADERID)"
+    efibootmgr -n "$BOOTNUM"
+fi
+
+if ! efibootmgr | grep -q "^BootOrder: $BOOTNUM,"; then
+    BOOTORDER=$(efibootmgr | grep -oP "^BootOrder: \K(.*)")
     echo "Setting bootloader to $BOOTNUM,$BOOTORDER"
-    efibootmgr -o "$BOOTNUM,$BOOTORDER"
+    efibootmgr -D -o "$BOOTNUM,$BOOTORDER"
 fi

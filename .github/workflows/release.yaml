@@ -31,10 +31,12 @@ jobs:
           maintainer: MetalStack
           version: ${{ github.ref }} # refs/tags/v*.*.*
           arch: 'amd64'
-          depends: 'libc6 (>= 2.2.1), git'
           desc: 'metal-stack bootloader.'
-      - uses: actions/upload-artifact@v3
+      - name: prepare deploy
+        run: |
+          mkdir -p deploy
+          cp *.deb deploy/
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          name: artifact-deb
-          path: |
-            ./*.deb
+          folder: deploy

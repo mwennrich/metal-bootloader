@@ -4,7 +4,7 @@ Description=metal-stack bootloader
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/metal-boodloader.sh
+ExecStart=/usr/bin/metal-bootloader.sh
 RemainAfterExit=true
 
 [Install]
