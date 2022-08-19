@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+
+systemctl daemon-reload
+systemctl enable metal-bootloader
+/usr/bin/metal-bootloader.sh
